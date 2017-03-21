@@ -5,17 +5,17 @@
             [clojure.java.io :as io])
   (:import [java.io ByteArrayOutputStream]))
 
-(def header [::h/version        1
-             ::h/fsc            2
-             ::h/licence-code   4
-             ::h/tag-id         2
-             ::h/tag-type       1
-             ::h/body-length    2
-             ::h/attribute      2
-             ::h/transaction-id 8
-             ::h/service-id     2
-             ::h/message-id     1
-             ::h/spare          3])
+(def header [::h/version          1
+             ::h/fsc              2
+             ::h/licence-code     4
+             ::h/tag-id           2
+             ::h/tag-type         1
+             ::h/body-length      2
+             ::h/attribute-length 2
+             ::h/transaction-id   8
+             ::h/service-id       2
+             ::h/message-id       1
+             ::h/spare            3])
 
 (defn consume-bytes! [rdr length]
   (when (-> length (> 0))

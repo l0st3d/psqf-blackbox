@@ -8,7 +8,7 @@
 (s/def ::tag-id ::c/ushort)
 (s/def ::tag-type ::c/uchar)
 (s/def ::body-length ::c/ushort)
-(s/def ::attribute ::c/ushort)
+(s/def ::attribute-length ::c/ushort)
 (s/def ::transaction-id ::c/uchar)
 (s/def ::service-id ::c/uchar)
 (s/def ::message-id ::c/uchar)
