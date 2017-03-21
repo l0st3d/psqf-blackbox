@@ -5,6 +5,7 @@
             [clojure.java.io :as io])
   (:import [java.io ByteArrayOutputStream]))
 
+;; TODO rename fns to have ! at the end!
 (defn parse-header [ios]
   (c/parse-structure ios h/structure))
 
@@ -16,12 +17,15 @@
 ;; lengths from the structures to check length
 (defn parse-attrs [ios header]          
   (let [attr-ios (io/input-stream (c/consume-bytes! ios (::h/attribute-length header)))]
-    (take-while (complement nil?) (repeatedly #(c/parse-attrs attr-ios header)))))
+    (->> #(c/parse-attrs attr-ios header)
+         repeatedly
+         (take-while (complement #{::c/done}))
+         (reduce merge))))
 
 (defn parser [input]
   (let [ios    (io/input-stream input)
         header (parse-header ios)
         body   (parse-body ios header)
         attrs  (parse-attrs ios header)]
-    ))
+    (merge header body attrs)))
 

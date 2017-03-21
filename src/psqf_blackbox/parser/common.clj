@@ -46,8 +46,8 @@
 (defn consume-bytes! [ios length]
   (when (-> length (> 0))
     (let [ba (byte-array length)]
-      (.read ios ba)
-      ba)))
+      (when (>= (.read ios ba) 0)
+        ba))))
 
 (defn parse-structure [ios structure]
   (loop [acc        {}
@@ -66,8 +66,14 @@
       acc)))
 
 (defn- read-attr-code! [^java.io.InputStream ios & rest]
-  (bytes->long (consume-bytes! ios 2)))
+  (when-let [bytes (consume-bytes! ios 2)]
+    (bytes->long bytes)))
 
 (defmulti parse-attrs read-attr-code!)
 
-(defmethod parse-attrs -1 [ios & rest] nil)
+(defmethod parse-attrs nil [ios & rest] ::done)
+
+(defmethod parse-attrs :default [ios & rest]
+  (let [len (un-sign (first (consume-bytes! ios 1)))]
+    (consume-bytes! ios len))
+  nil)
