@@ -7,8 +7,11 @@
 
 (deftest should-parse-some-data-files
   (testing "header"
-    (let [parser (p/make-parser p/header)]
-      (is (map? (parser "test-resources/bet_request.bin"))))))
+    (let [parser (p/make-parser p/header)
+          v (parser "test-resources/bet_request.bin")]
+      (is (map? v))
+      (is (= (into #{} (filter keyword? p/header))
+             (into #{} (keys v)))))))
 
 
 (deftest should-parse-bytes

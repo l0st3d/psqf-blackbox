@@ -17,7 +17,7 @@
     bytes))
 
 (defn bytes->long [bytes]
-  (if (and (byte-array? bytes) (-> bytes count (> 0)))
+  (if (byte-array? bytes)
     (loop [acc 0
            bytes bytes]
       (if (seq bytes)
