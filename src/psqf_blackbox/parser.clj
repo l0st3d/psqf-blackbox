@@ -12,10 +12,12 @@
              ::h/tag-type       1
              ::h/body-length    2
              ::h/attribute      2
-             ::h/transaction-id 8])
+             ::h/transaction-id 8
+             ::h/service-id     2
+             ::h/message-id     1
+             ::h/spare          3])
 
 (defn consume-bytes! [rdr length]
-  (prn 'consuming length 'bytes)
   (when (-> length (> 0))
     (let [ba (byte-array length)]
       (.read rdr ba)

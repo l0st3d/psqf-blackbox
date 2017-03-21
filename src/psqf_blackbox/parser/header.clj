@@ -10,6 +10,9 @@
 (s/def ::body-length ::c/ushort)
 (s/def ::attribute ::c/ushort)
 (s/def ::transaction-id ::c/uchar)
+(s/def ::service-id ::c/uchar)
+(s/def ::message-id ::c/uchar)
+(s/def ::spare (s/and ::c/uchar (s/conformer (constantly nil))))
 
 #_ (comment
      Version uchar (1 byte) Protocol version. Set to 2.
