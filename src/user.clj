@@ -4,6 +4,3 @@
             [psqf-blackbox.parser.common :as c]
             [clojure.spec :as s]
             [clojure.java.io :as io]))
-
-(s/def ::my-int integer?)
-

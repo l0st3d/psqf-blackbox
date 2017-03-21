@@ -7,14 +7,12 @@
 
 (def header [::h/version        1
              ::h/fsc            2
-             ;; ::h/licence-code   4
-             ;; ::h/tag-id         2
-             ;; ::h/tag-type       1
-             ;; ::h/body-length    2
-             ;; ::h/attribute      2
-             ;; ::h/transaction-id 8
-             ::c/vbinary        c/var-length
-             ])
+             ::h/licence-code   4
+             ::h/tag-id         2
+             ::h/tag-type       1
+             ::h/body-length    2
+             ::h/attribute      2
+             ::h/transaction-id 8])
 
 (defn consume-bytes! [rdr length]
   (prn 'consuming length 'bytes)

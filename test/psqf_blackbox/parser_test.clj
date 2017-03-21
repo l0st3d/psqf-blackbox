@@ -7,4 +7,4 @@
 (deftest should-parse-some-data-files
   (testing "header"
     (let [parser (p/make-parser p/header)]
-      (is (= nil (parser "test-resources/bet_request.bin"))))))
+      (is (map? (parser "test-resources/bet_request.bin"))))))
