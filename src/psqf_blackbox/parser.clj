@@ -5,29 +5,23 @@
             [clojure.java.io :as io])
   (:import [java.io ByteArrayOutputStream]))
 
-(def header h/structure)
+(defn parse-header [ios]
+  (c/parse-structure ios h/structure))
 
-(defn consume-bytes! [rdr length]
-  (when (-> length (> 0))
-    (let [ba (byte-array length)]
-      (.read rdr ba)
-      ba)))
+(defn parse-body [ios header]
+  (c/consume-bytes! ios (::h/body-length header))
+  nil)
 
-(defn make-parser [input-defs]
-  (fn parser [input]
-    (let [rdr (io/input-stream input)]
-      (loop [acc        {}
-             input-defs input-defs]
-        (if-let [[tag length] (seq input-defs)]
-          (let [length (if (= c/var-length length)
-                         (.read rdr)
-                         length)
-                bytes  (consume-bytes! rdr length)
-                val    (s/conform tag bytes)]
-            (when (= ::s/invalid val)
-              (throw (ex-info "Invalid data" {:input-def (first input-defs)
-                                              :length    length
-                                              :errors    (s/explain-data tag bytes)})))
-            (recur (assoc acc tag val) (next (next input-defs))))
-          acc)))))
+;; TODO don't copy byte array again if we're too slow - can add up the
+;; lengths from the structures to check length
+(defn parse-attrs [ios header]          
+  (let [attr-ios (io/input-stream (c/consume-bytes! ios (::h/attribute-length header)))]
+    (take-while (complement nil?) (repeatedly #(c/parse-attrs attr-ios header)))))
+
+(defn parser [input]
+  (let [ios    (io/input-stream input)
+        header (parse-header ios)
+        body   (parse-body ios header)
+        attrs  (parse-attrs ios header)]
+    ))
 
