@@ -17,6 +17,7 @@
              ])
 
 (defn consume-bytes! [rdr length]
+  (prn 'consuming length 'bytes)
   (when (-> length (> 0))
     (let [ba (byte-array length)]
       (.read rdr ba)
