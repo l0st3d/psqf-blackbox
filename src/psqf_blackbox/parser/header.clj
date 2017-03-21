@@ -2,7 +2,7 @@
   (:require [clojure.spec :as s]
             [psqf-blackbox.parser.common :as c]))
 
-(s/def ::version (s/and ::uchar #{"2"}))
+(s/def ::version (s/and ::c/uchar #{"2"}))
 (s/def ::fsc (s/and ::ushort (c/length-is 2)))
 (s/def ::licence-code (s/and ::uint #{"0000"}))
 (s/def ::tag-id (s/and ::ushort (c/length-is 2)))
