@@ -2,14 +2,14 @@
   (:require [clojure.spec :as s]
             [psqf-blackbox.parser.common :as c]))
 
-(s/def ::version (s/and ::uchar #{"2"}))
-(s/def ::fsc (s/and ::ushort (c/length-is 2)))
-(s/def ::licence-code (s/and ::uint #{"0000"}))
-(s/def ::tag-id (s/and ::ushort (c/length-is 2)))
-(s/def ::tag-type (s/and ::uchar (c/length-is 1)))
-(s/def ::body-length (s/and ::ushort (c/length-is 2)))
-(s/def ::attribute (s/and ::ushort (c/length-is 2)))
-(s/def ::transaction-id (s/and ::uchar (c/length-is 8)))
+(s/def ::version (s/and ::c/uchar #{(char 2)}))
+(s/def ::fsc (s/and ::c/ushort (c/length-is 2)))
+(s/def ::licence-code (s/and ::c/uint #{"0000"}))
+(s/def ::tag-id (s/and ::c/ushort (c/length-is 2)))
+(s/def ::tag-type (s/and ::c/uchar (c/length-is 1)))
+(s/def ::body-length (s/and ::c/ushort (c/length-is 2)))
+(s/def ::attribute (s/and ::c/ushort (c/length-is 2)))
+(s/def ::transaction-id (s/and ::c/uchar (c/length-is 8)))
 
 #_ (comment
      Version uchar (1 byte) Protocol version. Set to 2.
