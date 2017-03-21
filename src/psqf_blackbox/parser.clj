@@ -16,11 +16,6 @@
              ::c/vbinary        c/var-length
              ])
 
-(defn slurp-bytes [x]
-  (with-open [out (ByteArrayOutputStream.)]
-    (io/copy (io/input-stream x) out)
-    (.toByteArray out)))
-
 (defn consume-bytes! [rdr length]
   (when (-> length (> 0))
     (let [ba (byte-array length)]
