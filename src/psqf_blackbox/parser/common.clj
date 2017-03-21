@@ -1,5 +1,6 @@
 (ns psqf-blackbox.parser.common
-  (:require [clojure.spec :as s]))
+  (:require [clojure.spec :as s]
+            [clojure.string :as st]))
 
 (defn length-is [n]
   #(= n (count %)))
@@ -11,7 +12,7 @@
 (defn byte-array? [bytes]
   (= array-of-bytes-type (type bytes)))
 
-(defn uchar->int [bytes]
+(defn uchar->string [bytes]
   (if (= array-of-bytes-type (type bytes))
     (String. bytes)
     bytes))
@@ -29,7 +30,14 @@
         acc))
     bytes))
 
-(s/def ::uchar (s/and (s/conformer uchar->int) string?))
+(defn bytes->hex-str [bytes]
+  (st/join (map #(format "%02X" %) (seq bytes))))
+
+(defn debug-bytes [bytes]
+  (apply prn '->> (map #(format "%X" %) (seq bytes)))
+  bytes)
+
+(s/def ::uchar byte-array?)
 (s/def ::ushort (s/and (s/conformer bytes->long) integer?))
 (s/def ::uint (s/and (s/conformer bytes->long) integer?))
 

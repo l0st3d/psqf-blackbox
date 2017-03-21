@@ -5,17 +5,7 @@
             [clojure.java.io :as io])
   (:import [java.io ByteArrayOutputStream]))
 
-(def header [::h/version          1
-             ::h/fsc              2
-             ::h/licence-code     4
-             ::h/tag-id           2
-             ::h/tag-type         1
-             ::h/body-length      2
-             ::h/attribute-length 2
-             ::h/transaction-id   8
-             ::h/service-id       2
-             ::h/message-id       1
-             ::h/spare            3])
+(def header h/structure)
 
 (defn consume-bytes! [rdr length]
   (when (-> length (> 0))
@@ -41,25 +31,3 @@
             (recur (assoc acc tag val) (next (next input-defs))))
           acc)))))
 
-(defn parser [input-defs]
-  (let [input-spec   (s/* (s/cat :name keyword? :size integer?))
-        input-defs   (if (s/valid? input-spec input-defs)
-                       (s/conform input-spec input-defs)
-                       (throw (ex-info "Illegal Arg"
-                                       {:input-defs input-defs
-                                        :error      (s/explain-data input-spec input-defs)})))
-        fixed-widths (mapcat #(repeat (:size %) (:name %)) input-defs)
-        cat-spec     (->> input-defs
-                          (map :name)
-                          (mapcat #(vector (keyword (name %)) %))
-                          (cons `s/cat)
-                          eval)]
-    (fn [input]
-      (let [result (->> (seq input)
-                        (map vector fixed-widths)
-                        (partition-by first)
-                        (map #(apply str (map second %))))]
-        (if (s/valid? cat-spec result)
-          (s/conform cat-spec result)
-          (throw (ex-info "Invalid data" {:input input
-                                          :errors (s/explain-data cat-spec result)})))))))
