@@ -17,9 +17,7 @@
       (println "running here")
       (.receive socket_in packet)
       (let [{:keys [ip port bytes]} (parse packet)]
-        (println "found bytes %s" bytes)
-        (println "found port %s" port)
-        (.send (DatagramSocket. port ip) (DatagramPacket. bytes (count bytes)))
+        (.send (DatagramSocket.) (DatagramPacket. bytes (count bytes) ip port))
         )
       )
     ))
