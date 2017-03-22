@@ -38,8 +38,18 @@
   (prn '->> (bytes->hex-str bytes))
   bytes)
 
-(s/def ::uchar byte-array?)
-(s/def ::uint (s/and (s/conformer bytes->long) integer?))
+(defn ->raw [ba]
+  {:raw ba})
+
+(defn include [k f]
+  (fn [{:keys [raw] :as m}]
+    (assoc m k (f raw))))
+
+(s/def ::raw byte-array?)
+(s/def ::str string?)
+(s/def ::int integer?)
+(s/def ::uchar (s/and byte-array? (s/conformer ->raw)))
+(s/def ::uint (s/and byte-array? (s/conformer (comp (include ::int bytes->long) ->raw))))
 
 (s/def ::vbinary (s/* integer?))
 

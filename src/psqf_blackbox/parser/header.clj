@@ -2,7 +2,7 @@
   (:require [clojure.spec :as s]
             [psqf-blackbox.parser.common :as c]))
 
-(s/def ::version (s/and ::c/uint #{2}))
+(s/def ::version (s/and ::c/uint (comp #{2} ::c/int)))
 (s/def ::fsc ::c/uint)
 (s/def ::licence-code ::c/uint)
 (s/def ::shop-code ::c/uint)
@@ -10,7 +10,7 @@
 (s/def ::tag-type ::c/uint)
 (s/def ::body-length ::c/uint)
 (s/def ::attribute-length ::c/uint)
-(s/def ::transaction-id (s/and ::c/uchar (s/conformer c/bytes->hex-str) string?))
+(s/def ::transaction-id (s/and ::c/uchar (s/conformer (c/include ::c/str c/bytes->hex-str))))
 (s/def ::service-id ::c/uint)
 (s/def ::message-id ::c/uint)
 (s/def ::spare (s/and ::c/uchar (s/conformer (constantly nil))))

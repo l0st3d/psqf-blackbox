@@ -5,7 +5,7 @@
 
 (s/def ::length ::c/uint)
 (s/def ::port ::c/uint)
-(s/def ::ip-address (s/and ::c/uchar (s/conformer #(st/join "." (map c/un-sign (seq %))))))
+(s/def ::ip-address (s/and ::c/uchar (s/conformer (c/include ::c/str #(st/join "." (map c/un-sign (seq %)))))))
 
 (def structure [::length     1
                 ::port       2

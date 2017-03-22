@@ -10,13 +10,17 @@
     (let [v (p/parser "test-resources/bet_request.bin")]
       (is (map? v))
       (is (nil? v))
-      (is (= (into #{} (filter keyword? h/structure))
-             (into #{} (keys v)))))))
+      #_ (is (= (into #{} (filter keyword? h/structure))
+                (into #{} (keys v)))))))
 
 (deftest should-parse-bytes
   (testing "maths"
     (is (= (c/bytes->long (byte-array [1 0 0])) 65536))
     (is (= (c/bytes->long (byte-array [0 255 255])) 65535))))
+
+(deftest should-print-some-data
+  (testing "header"
+    ))
 
 #_ (defn parser [input-defs]
      (let [input-spec   (s/* (s/cat :name keyword? :size integer?))

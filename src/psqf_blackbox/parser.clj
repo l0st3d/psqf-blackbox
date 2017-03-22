@@ -11,13 +11,13 @@
   (c/parse-structure ios h/structure))
 
 (defn parse-body [ios header]
-  (c/consume-bytes! ios (::h/body-length header))
+  (c/consume-bytes! ios (-> header ::h/body-length ::c/int))
   nil)
 
 ;; TODO don't copy byte array again if we're too slow - can add up the
 ;; lengths from the structures to check length
 (defn parse-attrs [ios header]          
-  (let [attr-ios (io/input-stream (c/consume-bytes! ios (::h/attribute-length header)))]
+  (let [attr-ios (io/input-stream (c/consume-bytes! ios (-> header ::h/attribute-length ::c/int)))]
     (->> #(c/parse-attrs attr-ios header)
          repeatedly
          (take-while (complement #{::c/done}))
