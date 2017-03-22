@@ -16,24 +16,26 @@
               (map w/do-work)
               (map pr/->response)))
 
-(defn control [tx]
-  (let [in (a/chan 10)
-        out (a/chan 10)]
-    (a/pipeline 4 in tx out)
+(defn control [work pool-size]
+  (let [in (a/chan 1)
+        out (a/chan 1)]
+    (a/pipeline pool-size out work in)
     [in out]))
 
 (defn start-receiver []
   (while (true? @running)
-    (let [packet (DatagramPacket. buffer 1024)
-          [in out] (control tx)]
+    (let [packet (DatagramPacket. (byte-array 1024) 1024)
+          [in out] (control tx 5)]
       (prn "starting receiver")
       (.receive socket_in packet)
       (a/>!! in (.getData packet))
       (a/go
-        (let [{:keys [ip port bytes]} (a/<! out)]
-          (.send (DatagramSocket.) (DatagramPacket. bytes (count bytes) ip port))
+        (let [{:keys [ip port bytes]} (a/<! out)
+              socket (DatagramSocket.)]
+          (.send socket (DatagramPacket. bytes (count bytes) ip port))
+          (.close socket)
           )
-        ;)
+                                        ;)
         ))))
 
 (defn stop-receiver []
