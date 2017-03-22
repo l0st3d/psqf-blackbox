@@ -1,5 +1,6 @@
 (ns psqf-blackbox.parser-test
   (:require [psqf-blackbox.parser :as p]
+            [clojure.spec :as s]
             [psqf-blackbox.parser.header :as h]
             [psqf-blackbox.parser.common :as c]
             [clojure.test :refer [deftest testing is are use-fixtures]]
@@ -11,7 +12,10 @@
       (is (map? v))
       (is (nil? v))
       #_ (is (= (into #{} (filter keyword? h/structure))
-                (into #{} (keys v)))))))
+                (into #{} (keys v))))))
+  (testing "idempotent"
+    (let [v (p/parser "test-resources/bet_request.bin")]
+      (is (= v (s/conform (s/spec map?) v))))))
 
 (deftest should-parse-bytes
   (testing "maths"
