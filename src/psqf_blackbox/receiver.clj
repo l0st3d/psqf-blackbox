@@ -1,36 +1,37 @@
 (ns psqf-blackbox.receiver
   (:import [java.net DatagramSocket DatagramPacket InetAddress])
   (:require [psqf-blackbox.parser :as bp]
-            [psqf-blackbox.controller :as bc]
             [clojure.core.async :as a]
-            [psqf-blackbox.parser :as p]))
+            [psqf-blackbox.parser :as p]
+            [psqf-blackbox.worker :as w]
+            [psqf-blackbox.printer :as pr]
+            ))
 
 (def socket_in (DatagramSocket. 5200))
 
 (def running (atom true))
 (def buffer (make-array Byte/TYPE 1024))
 
-(defn control []
+(def tx (comp (map p/parser)
+              (map w/do-work)
+              (map pr/->response)))
+
+(defn control [tx]
   (let [in (a/chan 10)
         out (a/chan 10)]
-    (a/go (while true
-            (let [input (a/<! in)
-                  output (p/parser input)]
-              (prn output)
-              (a/>! out output)
-              )))
+    (a/pipeline 4 in tx out)
     [in out]))
 
 (defn start-receiver []
   (while (true? @running)
     (let [packet (DatagramPacket. buffer 1024)
-          [in out] (control)]
+          [in out] (control tx)]
       (prn "starting receiver")
       (.receive socket_in packet)
       (a/>!! in (.getData packet))
       (a/go
         (let [{:keys [ip port bytes]} (a/<! out)]
-          (.send (DatagramSocket.) (DatagramPacket. bytes (count bytes) (InetAddress/getByName "127.0.0.1") 5201))
+          (.send (DatagramSocket.) (DatagramPacket. bytes (count bytes) ip port))
           )
         ;)
         ))))
