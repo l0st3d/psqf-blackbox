@@ -24,9 +24,9 @@
                    ::bets/event-code 5678
                    ::bets/number-of-events 1
                    ::bets/schedule-code 56
-                   ::da/year (.getYear currentDate)
-                   ::da/month (.getMonth currentDate)
-                   ::da/day (.getDay currentDate)
+                   ::da/year (+ 1900 (.getYear currentDate))
+                   ::da/month (+ 1 (.getMonth currentDate))
+                   ::da/day (.getDate currentDate)
                    ::da/hour (.getHours currentDate)
                    ::da/mins (.getMinutes currentDate)
                    ::da/seconds (.getSeconds currentDate)
