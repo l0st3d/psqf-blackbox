@@ -3,3 +3,6 @@
 *** TODO multispec
 *** TODO {:raw :hex :etc}
 *** TODO replace inputstream with bytearray
+
+For capturing SOGEI packets between sogei service and black box:
+tcpdump -nn -i lo port 4500 or port 9465 -w sogei.pcap
