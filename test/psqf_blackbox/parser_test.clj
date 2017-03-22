@@ -9,10 +9,9 @@
   (testing "header"
     (let [v (p/parser "test-resources/bet_request.bin")]
       (is (map? v))
-      (is (= {} v))
+      (is (nil? v))
       (is (= (into #{} (filter keyword? h/structure))
              (into #{} (keys v)))))))
-
 
 (deftest should-parse-bytes
   (testing "maths"
