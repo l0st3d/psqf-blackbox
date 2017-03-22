@@ -15,8 +15,8 @@
               (map pr/serialise)))
 
 (defn control [work pool-size]
-  (let [in (a/chan 1)
-        out (a/chan 1)]
+  (let [in (a/chan 10)
+        out (a/chan 10)]
     (a/pipeline pool-size out work in)
     [in out]))
 
