@@ -7,7 +7,7 @@
             [psqf-blackbox.printer :as pr]
             ))
 
-(def socket_in (DatagramSocket. 5200))
+(defonce socket_in (DatagramSocket. 5200))
 
 (def running (atom true))
 (def buffer (make-array Byte/TYPE 1024))
