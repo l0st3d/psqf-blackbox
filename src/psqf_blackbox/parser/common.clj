@@ -63,6 +63,7 @@
       (when (>= (.read ios ba) 0)
         ba))))
 
+;; TODO should be able to replace this nonsense with a multispec
 (defn parse-structure [ios structure]
   (loop [acc        {}
          input-defs structure]
