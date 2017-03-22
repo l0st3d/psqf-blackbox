@@ -31,10 +31,12 @@
   (cond (::c/raw v)  (::c/raw v)
         (integer? v) (int->bytes v)
         (string? v)  (.getBytes v)
+        (nil? v)     []
         :else        (throw (ex-info "Cannot get raw value" {:data v}))))
 
 (defn serialise [r]
   (let [body   (mapcat get-raw (map r body-structure))
         attrs  (mapcat get-raw (map r attrs-structure))
         header (mapcat get-raw (map (assoc r ::h/body-length (count body) ::h/attribute-length (count attrs)) header-structure))]
+    (prn `serialise '>> r)
     [r (byte-array (concat header body attrs))]))

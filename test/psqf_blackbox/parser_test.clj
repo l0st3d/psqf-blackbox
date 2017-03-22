@@ -21,7 +21,8 @@
 (deftest should-parse-bytes
   (testing "maths"
     (is (= (c/bytes->long (byte-array [1 0 0])) 65536))
-    (is (= (c/bytes->long (byte-array [0 255 255])) 65535))))
+    (is (= (c/bytes->long (byte-array [0 255 255])) 65535))
+    (is (= (resp/int->bytes 511))) [1 255]))
 
 (deftest should-print-some-data
   (testing "header"
