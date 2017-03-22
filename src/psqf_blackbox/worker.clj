@@ -7,6 +7,7 @@
             [psqf-blackbox.parser.body.place-bet :as b]
             [psqf-blackbox.parser.attrs.bets-placed :as bets]
             [psqf-blackbox.parser.attrs.date :as da]
+            [psqf-blackbox.parser.attrs.return-address :as ra]
             )
   (:import (java.util Date)))
 
@@ -17,7 +18,9 @@
   ;(prn parsed-message)
 
   (let [header (select-keys parsed-message (filter keyword? h/structure))]
-    (let [currentDate (Date.)]
+    (let [currentDate (Date.)
+          {ip-address ::ra/ip-address port ::ra/port} parsed-message]
+      (prn ip-address " and " port)
     (merge header {::b/receipt 1234
                    ::b/responsecode 1024
                    ::bets/length 6
@@ -30,5 +33,7 @@
                    ::da/hour (.getHours currentDate)
                    ::da/mins (.getMinutes currentDate)
                    ::da/seconds (.getSeconds currentDate)
+                   ::ra/ip-address ip-address
+                   ::ra/port port
                    }))))
 (defmethod do-work [7900 2] [parsed-message] {})
