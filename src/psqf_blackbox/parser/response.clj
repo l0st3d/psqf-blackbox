@@ -2,11 +2,13 @@
   (:require [clojure.spec :as s]
             [psqf-blackbox.parser.common :as c]
             [psqf-blackbox.parser.header :as h]
-            [psqf-blackbox.parser.attrs.return-address :as ret-addr]))
+            [psqf-blackbox.parser.attrs.return-address :as ret-addr]
+            [psqf-blackbox.parser.body.place-bet :as place-bet]))
 
 (def structure (->> 
                 (concat h/structure
-                        ret-addr/structure)
+                        ret-addr/structure
+                        place-bet/structure)
                 (filter keyword?)))
 
 (def header-structure (->> structure
