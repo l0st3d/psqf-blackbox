@@ -10,8 +10,6 @@
 
 (defonce server (atom nil))
 
-(defonce running (atom true))
-
 (def tx (comp (map p/parser)
               (map w/do-work)
               (map pr/serialise)))
@@ -22,9 +20,10 @@
     (a/pipeline pool-size out work in)
     [in out]))
 
-(defn- stop [{:keys [socket]}]
+(defn- stop [{:keys [socket running]}]
   (when socket
     (prn "stopping receiver")
+    (reset! running false)
     (.close socket)
     (Thread/sleep 1000)
     nil))
@@ -33,6 +32,7 @@
   (swap! server (fn [a]
                   (stop a)
                   (let [s (DatagramSocket. 5200)
+                        running (atom nil)
                         t (Thread. (fn []
                                      (prn "starting receiver")
                                      (while @running
@@ -53,10 +53,10 @@
                                            (reset! running false))))))]
                     (.start t)
                     {:socket s
+                     :running running
                      :thread t}))))
 
 (defn stop-receiver []
-  (reset! running false)
   (swap! server stop))
 
 
