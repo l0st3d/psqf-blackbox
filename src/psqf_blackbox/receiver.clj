@@ -9,7 +9,7 @@
 
 (defonce socket_in (DatagramSocket. 5200))
 
-(def running (atom true))
+(defonce running (atom true))
 (def buffer (make-array Byte/TYPE 1024))
 
 (def tx (comp (map p/parser)
