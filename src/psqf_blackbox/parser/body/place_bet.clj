@@ -1,4 +1,4 @@
-(ns psqf-blackbox.parser.body
+(ns psqf-blackbox.parser.body.place_bet
   (:require [clojure.spec :as s]
             [psqf-blackbox.parser.common :as c]))
 

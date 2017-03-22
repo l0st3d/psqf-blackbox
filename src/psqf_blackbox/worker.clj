@@ -4,7 +4,7 @@
             [clojure.core.async :as a]
             [psqf-blackbox.parser :as p]
             [psqf-blackbox.parser.header :as h]
-            [psqf-blackbox.parser.body :as b]
+            [psqf-blackbox.parser.body.place_bet :as b]
             [psqf-blackbox.parser.attrs.bets-placed :as bets]
             [psqf-blackbox.parser.attrs.date :as da]
             )
