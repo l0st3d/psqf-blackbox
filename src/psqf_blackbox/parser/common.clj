@@ -39,17 +39,21 @@
   bytes)
 
 (defn ->raw [ba]
-  {:raw ba})
+  (if (byte-array? ba)
+    {:raw ba}
+    ba))
 
 (defn include [k f]
   (fn [{:keys [raw] :as m}]
-    (assoc m k (f raw))))
+    (if-not (contains? m k)
+      (assoc m k (f raw))
+      m)))
 
 (s/def ::raw byte-array?)
 (s/def ::str string?)
 (s/def ::int integer?)
-(s/def ::uchar (s/and byte-array? (s/conformer ->raw)))
-(s/def ::uint (s/and byte-array? (s/conformer (comp (include ::int bytes->long) ->raw))))
+(s/def ::uchar (s/conformer ->raw))
+(s/def ::uint (s/conformer (comp (include ::int bytes->long) ->raw)))
 
 (s/def ::vbinary (s/* integer?))
 
