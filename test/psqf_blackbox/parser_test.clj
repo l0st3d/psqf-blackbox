@@ -3,6 +3,7 @@
             [clojure.spec :as s]
             [psqf-blackbox.parser.header :as h]
             [psqf-blackbox.parser.common :as c]
+            [psqf-blackbox.parser.response :as resp]
             [clojure.test :refer [deftest testing is are use-fixtures]]
             [clojure.java.io :as io]))
 
@@ -24,7 +25,23 @@
 
 (deftest should-print-some-data
   (testing "header"
-    ))
+    (let [example {::h/tag-type         {::c/raw [5], ::c/int 5},
+                   ::h/transaction-id   {::c/raw [41, -92, 88, -47, 4, -13, 0, 3]
+                                         ::c/str "29A458D104F30003"},
+                   ::h/attribute-length {::c/raw [0, 84], ::c/int 84},
+                   ::h/shop-code        {::c/raw [0, 0, 48, 57], ::c/int 12345},
+                   ::h/version          {::c/raw [2], ::c/int 2},
+                   ::h/fsc              {::c/raw [0, 80], ::c/int 80}, ::h/spare nil,
+                   ::h/service-id       {::c/raw [30, -36], ::c/int 7900},
+                   ::h/tag-id           {::c/raw [0, 1], ::c/int 1},
+                   ::h/body-length      {::c/raw [0, 21], ::c/int 21},
+                   ::h/message-id       {::c/raw [1], ::c/int 1},
+                   ::h/licence-code     {::c/raw [0, 0, 48, 57], ::c/int 12345}}
+          result (resp/serialise example)]
+      (is (map? (first result)))
+      (is (c/byte-array? (second result)))
+      (is (= example (first result)))
+      (is (= (byte-array [2 0 80 0 0 48 57 0 0 48 57 0 1 5 0 21 0 84 41 -92 88 -47 4 -13 0 3 30 -36 1]))))))
 
 #_ (defn parser [input-defs]
      (let [input-spec   (s/* (s/cat :name keyword? :size integer?))

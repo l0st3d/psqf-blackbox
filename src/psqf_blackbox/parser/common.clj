@@ -40,20 +40,26 @@
 
 (defn ->raw [ba]
   (if (byte-array? ba)
-    {:raw ba}
+    {::raw ba}
     ba))
 
 (defn include [k f]
-  (fn [{:keys [raw] :as m}]
+  (fn [{raw ::raw :as m}]
     (if-not (contains? m k)
       (assoc m k (f raw))
       m)))
 
+(defn raw->byte-array [{raw ::raw :as m}]
+  (if-not (byte-array? raw)
+    (byte-array raw)
+    raw))
+
 (s/def ::raw byte-array?)
 (s/def ::str string?)
 (s/def ::int integer?)
-(s/def ::uchar (s/conformer ->raw))
-(s/def ::uint (s/conformer (comp (include ::int bytes->long) ->raw)))
+(s/def ::element (s/keys :req [::raw] :opt [::str ::int]))
+(s/def ::uchar (s/and (s/conformer ->raw raw->byte-array) ::element))
+(s/def ::uint (s/and (s/conformer (comp (include ::int bytes->long) ->raw)) ::element))
 
 (s/def ::vbinary (s/* integer?))
 
