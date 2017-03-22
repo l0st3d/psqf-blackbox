@@ -13,7 +13,7 @@
 (s/def ::transaction-id (s/and ::c/uchar (s/conformer (c/include ::c/str c/bytes->hex-str))))
 (s/def ::service-id ::c/uint)
 (s/def ::message-id ::c/uint)
-(s/def ::spare (s/and ::c/uchar (s/conformer (constantly nil))))
+(s/def ::spare ::c/uchar)
 
 (def structure [::version          1
                 ::fsc              2
