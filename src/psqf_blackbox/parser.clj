@@ -2,6 +2,7 @@
   (:require [clojure.spec :as s]
             [psqf-blackbox.parser.header :as h]
             [psqf-blackbox.parser.attrs.return-address :as ret-addr]
+            [psqf-blackbox.parser.attrs.account :as account]
             [psqf-blackbox.parser.common :as c]
             [clojure.java.io :as io])
   (:import [java.io ByteArrayOutputStream]))
