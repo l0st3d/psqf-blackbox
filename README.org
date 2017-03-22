@@ -1,0 +1,5 @@
+* PSQF Sogei Blackbox
+** Future
+*** TODO multispec
+*** TODO {:raw :hex :etc}
+*** TODO replace inputstream with bytearray
