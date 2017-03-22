@@ -26,6 +26,7 @@
   (when socket
     (prn "stopping receiver")
     (.close socket)
+    (Thread/sleep 1000)
     nil))
 
 (defn start-receiver []
@@ -33,11 +34,11 @@
                   (stop a)
                   (let [s (DatagramSocket. 5200)
                         t (Thread. (fn []
+                                     (prn "starting receiver")
                                      (while @running
                                        (try
                                          (let [packet (DatagramPacket. (byte-array 1024) 1024)
                                                [in out] (control tx 5)]
-                                           (prn "starting receiver")
                                            (.receive s packet)
                                            (a/>!! in (.getData packet))
                                            (a/go
@@ -48,13 +49,14 @@
                                                (.send socket (DatagramPacket. bytes (count bytes) (InetAddress/getByName ip-address) port))
                                                (.close socket))))
                                          (catch java.net.SocketException e
-                                           (prn "socket exception"))))))]
+                                           (prn "socket exception")
+                                           (reset! running false))))))]
                     (.start t)
                     {:socket s
                      :thread t}))))
 
 (defn stop-receiver []
-  (reset! @running false)
+  (reset! running false)
   (swap! server stop))
 
 
