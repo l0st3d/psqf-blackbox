@@ -8,9 +8,7 @@
             ))
 
 (defonce socket_in (DatagramSocket. 5200))
-
-(def running (atom true))
-(def buffer (make-array Byte/TYPE 1024))
+(defonce running (atom true))
 
 (def tx (comp (map p/parser)
               (map w/do-work)
@@ -24,7 +22,7 @@
 
 (defn start-receiver []
   (while (true? @running)
-    (let [packet (DatagramPacket. buffer 1024)
+    (let [packet (DatagramPacket. (byte-array 1024) 1024)
           [in out] (control tx 5)]
       (prn "starting receiver")
       (.receive socket_in packet)
